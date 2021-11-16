@@ -1,5 +1,4 @@
 # Oh365UserFinder
-Python3 o365 User Enumeration Tool
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M03Q2JN)
 
