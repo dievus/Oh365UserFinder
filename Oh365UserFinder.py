@@ -4,6 +4,7 @@ import time
 import re
 import textwrap
 import sys
+from datetime import datetime
 
 print("-" * 60)
 print("                MayorSec Oh365 User Finder              ")
@@ -22,14 +23,18 @@ opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
 opt_parser.add_argument('-t', '--threading',
                         help='Set threading between checks')
 opt_parser.add_argument('-w', '--write', help='Writes valid emails to file')
-opt_parser.add_argument('-v', '--verbose', help='Prints output verbosely - use y or n options', metavar=['y', 'n'])
+opt_parser.add_argument(
+    '-v', '--verbose', help='Prints output verbosely - use y or n options', metavar=['y', 'n'])
 args = opt_parser.parse_args()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
+
 def main():
     if args.threading is not None:
-        print(f'\n[*] Threading set to {args.threading} seconds between requests. [*]\n')
+        print(
+            f'\n[*] Threading set to {args.threading} seconds between requests. [*]\n')
     counter = 0
+    t1 = datetime.now()
     if args.email is not None:
         email = args.email
         s = o365request.session()
@@ -77,7 +82,7 @@ def main():
                 if valid_response:
                     print("[+] " + email + " - Valid Email Found! [+]")
                     counter = counter + 1
-                    #print(counter)
+                    # print(counter)
                     if args.write is not None:
                         with open(args.write, 'a+') as valid_emails_file:
                             valid_emails_file.write(email+'\n')
@@ -85,12 +90,24 @@ def main():
                     time.sleep(int(args.threading))
             if counter == 0:
                 print("\n[-] There were no valid logins found. [-]")
+                t2 = datetime.now()
+                total = t2 - t1
+                print(f'\n[*] Total scan time {total} [*]')
             elif counter == 1:
-                print("\n[*] Oh365 User Finder discovered one valid login account. [*]")
-            else:    
-                print(f'\n[*] Oh365 User Finder discovered {counter} valid login accounts. [*]')
+                print(
+                    "\n[*] Oh365 User Finder discovered one valid login account. [*]")
+                t2 = datetime.now()
+                total = t2 - t1
+                print(f'\n[*] Total scan time {total} [*]')
+            else:
+                print(
+                    f'\n[*] Oh365 User Finder discovered {counter} valid login accounts. [*]')
+                t2 = datetime.now()
+                total = t2 - t1
+                print(f'\n[*] Scan completed in {total} [*]')
     else:
         sys.exit()
+
 
 if __name__ == "__main__":
     try:
