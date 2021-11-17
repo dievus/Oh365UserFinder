@@ -20,8 +20,8 @@ Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 -v y
 opt_parser.add_argument(
     '-e', '--email', help='Runs o365UserFinder against a single email')
 opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
-opt_parser.add_argument('-t', '--threading',
-                        help='Set threading between checks')
+opt_parser.add_argument('-t', '--throttling',
+                        help='Set timeout between checks')
 opt_parser.add_argument('-w', '--write', help='Writes valid emails to file')
 opt_parser.add_argument(
     '-v', '--verbose', help='Prints output verbosely - use y or n options', metavar=['y', 'n'])
@@ -30,9 +30,9 @@ ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
 
 def main():
-    if args.threading is not None:
+    if args.throttling is not None:
         print(
-            f'\n[*] Threading set to {args.threading} seconds between requests. [*]\n')
+            f'\n[*] Throttling set to {args.throttling} seconds between requests. [*]\n')
     counter = 0
     t1 = datetime.now()
     if args.email is not None:
@@ -47,8 +47,8 @@ def main():
             print("[-] " + email + " - Invalid Email [-]")
         if valid_response:
             print("[+] " + email + " - Valid Email Found! [+]")
-        if args.threading is not None:
-            time.sleep(int(args.threading))
+        if args.throttling is not None:
+            time.sleep(int(args.throttling))
 
     elif args.read is not None:
         with open(args.read) as input_emails:
@@ -86,8 +86,8 @@ def main():
                     if args.write is not None:
                         with open(args.write, 'a+') as valid_emails_file:
                             valid_emails_file.write(email+'\n')
-                if args.threading is not None:
-                    time.sleep(int(args.threading))
+                if args.throttling is not None:
+                    time.sleep(int(args.throttling))
             if counter == 0:
                 print("\n[-] There were no valid logins found. [-]")
                 t2 = datetime.now()
