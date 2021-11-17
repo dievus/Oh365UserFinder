@@ -42,11 +42,19 @@ def main():
         request = o365request.post(ms_url, data=body)
         response = request.text
         valid_response = re.search('"IfExistsResult":0,', response)
+        valid_response5 = re.search('"IfExistsResult":5,', response)
+        valid_response6 = re.search('"IfExistsResult":6,', response)                
         invalid_response = re.search('"IfExistsResult":1,', response)
         if invalid_response:
-            print("[-] " + email + " - Invalid Email [-]")
-        if valid_response:
-            print("[+] " + email + " - Valid Email Found! [+]")
+            a = email
+            b = " Result - Invalid Email Found! [-]"      
+            print(f"[-] {a:20} {b}")      
+            #print("[-] " + email + " - Invalid Email [-]")
+        if valid_response or valid_response5 or valid_response6:
+            a = email
+            b = " Result - Valid Email Found! [+]"
+            print(f"[+] {a:20} {b}")
+            #print("[+] " + email + " - Valid Email Found! [+]")
         if args.throttling is not None:
             time.sleep(int(args.throttling))
 
@@ -74,13 +82,27 @@ def main():
                 valid_response = re.search('"IfExistsResult":0,', response)
                 if args.verbose == 'y':
                     print(valid_response)
+                valid_response5 = re.search('"IfExistsResult":5,', response)
+                if args.verbose == 'y':
+                    print(valid_response)
+                valid_response6 = re.search('"IfExistsResult":6,', response)  
+                if args.verbose == 'y':
+                    print(valid_response) 
+                if args.verbose == 'y':
+                    print(valid_response)
                 invalid_response = re.search('"IfExistsResult":1,', response)
                 if args.verbose == 'y':
                     print(invalid_response)
                 if invalid_response:
-                    print("[-] " + email + " - Invalid Email [-]")
-                if valid_response:
-                    print("[+] " + email + " - Valid Email Found! [+]")
+                    a = email
+                    b = " Result - Invalid Email Found! [-]"      
+                    print(f"[-] {a:30} {b}")                      
+                    #print("[-] " + email + " - Invalid Email [-]")
+                if valid_response or valid_response5 or valid_response6:
+                    a = email
+                    b = " Result - Valid Email Found! [+]"      
+                    print(f"[+] {a:30} {b}")      
+                    #print("[+] " + email + " - Valid Email Found! [+]")
                     counter = counter + 1
                     # print(counter)
                     if args.write is not None:
