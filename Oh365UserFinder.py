@@ -27,6 +27,8 @@ args = opt_parser.parse_args()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
 def main():
+    if args.threading is not None:
+        print(f'\n[*] Threading set to {args.threading} seconds between requests. [*]\n')
     counter = 0
     if args.email is not None:
         email = args.email
@@ -94,5 +96,5 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\nGoodbye!")
+        print("\nYou either fat fingered this, or meant to do it. Either way, goodbye!")
         quit()
