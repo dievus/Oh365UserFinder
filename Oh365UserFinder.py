@@ -9,6 +9,7 @@ print("-" * 60)
 print("                MayorSec Oh365 User Finder              ")
 print("                       Version 1.0.0                    ")
 print("                   A project by The Mayor               ")
+print("           Oh365UserFinder.py -h to get started         ")
 print("-" * 60)
 opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
     '''Example: python3 Oh365UserFinder.py -e test@test.com
