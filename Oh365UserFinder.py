@@ -26,8 +26,8 @@ opt_parser.add_argument('-v', '--verbose', help='Prints output verbosely - use y
 args = opt_parser.parse_args()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
-
 def main():
+    counter = 0
     if args.email is not None:
         email = args.email
         s = o365request.session()
@@ -74,14 +74,21 @@ def main():
                     print("[-] " + email + " - Invalid Email [-]")
                 if valid_response:
                     print("[+] " + email + " - Valid Email Found! [+]")
+                    counter = counter + 1
+                    #print(counter)
                     if args.write is not None:
                         with open(args.write, 'a+') as valid_emails_file:
                             valid_emails_file.write(email+'\n')
                 if args.threading is not None:
                     time.sleep(int(args.threading))
+            if counter == 0:
+                print("\n[-] There were no valid logins found. [-]")
+            elif counter == 1:
+                print("\n[*] Oh365 User Finder discovered one valid login account. [*]")
+            else:    
+                print(f'\n[*] Oh365 User Finder discovered {counter} valid login accounts. [*]')
     else:
         sys.exit()
-
 
 if __name__ == "__main__":
     main()
