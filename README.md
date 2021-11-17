@@ -45,7 +45,7 @@ Examples of full commands include:
 ### Notes
 Make note that Microsoft does have some defense in place that can, from time to time, provide false positives in feedback.  If you suspect that this is occurring take a pause in testing, and return and increase the duration between attempts using the -t flag.
 
-![Oh365UserFinderScan](/images/Oh365UserFinderscan.png)
+![Oh365UserFinderScan](/images/o365UserFinderscan.png)
 
 ### Acknowledgements
 This project is based on a previous tool named o365Creeper developed by Korey Mckinley that was last supported in 2019, and developed in Python2.  
