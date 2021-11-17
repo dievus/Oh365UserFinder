@@ -91,4 +91,8 @@ def main():
         sys.exit()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nGoodbye!")
+        quit()
