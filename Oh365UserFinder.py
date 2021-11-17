@@ -101,7 +101,7 @@ def main():
                 if valid_response or valid_response5 or valid_response6:
                     a = email
                     b = " Result - Valid Email Found! [+]"      
-                    print(f"[+] {a:30} {b}")      
+                    print(f"[+] {a:32} {b}")      
                     #print("[+] " + email + " - Valid Email Found! [+]")
                     counter = counter + 1
                     # print(counter)
