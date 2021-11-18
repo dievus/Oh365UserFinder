@@ -38,7 +38,7 @@ print(f'[info] Starting Oh365 User Finder at {time.ctime()}\n')
 def main():
     if args.timeout is not None:
         print(
-            f'\n[info] Timeout set to {args.timeout} seconds between requests.\n')
+            f'[info] Timeout set to {args.timeout} seconds between requests.\n')
     counter = 0
     t1 = datetime.now()
     if args.email is not None:
