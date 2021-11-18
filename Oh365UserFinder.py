@@ -5,6 +5,7 @@ import re
 import textwrap
 import sys
 from datetime import datetime
+import csv
 
 print("-" * 60)
 print("                MayorSec Oh365 User Finder              ")
@@ -16,13 +17,15 @@ opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelp
     '''Example: python3 Oh365UserFinder.py -e test@test.com
 Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt -v y
 Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 -v y
+Example: python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30
 '''))
 opt_parser.add_argument(
     '-e', '--email', help='Runs o365UserFinder against a single email')
 opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
 opt_parser.add_argument('-t', '--throttling',
                         help='Set timeout between checks')
-opt_parser.add_argument('-w', '--write', help='Writes valid emails to file')
+opt_parser.add_argument('-w', '--write', help='Writes valid emails to text file')
+opt_parser.add_argument('-c', '--csv', help='Writes valid emails to a .csv file')
 opt_parser.add_argument(
     '-v', '--verbose', help='Prints output verbosely - use y or n options', metavar=['y', 'n'])
 args = opt_parser.parse_args()
@@ -106,6 +109,10 @@ def main():
                     if args.write is not None:
                         with open(args.write, 'a+') as valid_emails_file:
                             valid_emails_file.write(email+'\n')
+                    elif args.csv is not None:
+                        with open(args.csv, 'a+') as valid_emails_file:
+                            valid_emails_file.write(email+'\n')
+
                 if args.throttling is not None:
                     time.sleep(int(args.throttling))
             if counter == 0:
