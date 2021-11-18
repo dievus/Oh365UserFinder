@@ -6,6 +6,8 @@ import textwrap
 import sys
 from datetime import datetime
 
+from requests.api import request
+
 print("-" * 60)
 print("                MayorSec Oh365 User Finder              ")
 print("                       Version 1.0.0                    ")
@@ -17,18 +19,21 @@ opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelp
 Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30
+Example: python3 Oh365Finder.py -d mayorsec.com
 '''))
 opt_parser.add_argument(
     '-e', '--email', help='Runs o365UserFinder against a single email')
 opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
-opt_parser.add_argument('-t', '--timeout',
-                        help='Set timeout between checks to avoid false positives')
+opt_parser.add_argument(
+    '-t', '--timeout', help='Set timeout between checks to avoid false positives')
 opt_parser.add_argument(
     '-w', '--write', help='Writes valid emails to text file')
 opt_parser.add_argument(
     '-c', '--csv', help='Writes valid emails to a .csv file')
+opt_parser.add_argument('--domain', help='Validate if a domain exists')
 opt_parser.add_argument(
     '--verbose', help='Prints output verbosely', action='store_true')
+
 args = opt_parser.parse_args()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
@@ -113,6 +118,21 @@ def main():
                     f'\n[info] Oh365 User Finder discovered {counter} valid login accounts.\n')
                 print(f'\n[info] Scan completed at {time.ctime()}')
 
+    elif args.domain is not None:
+        domain_name = args.domain
+        print(f"[info] Checking if the {domain_name} exists...\n")
+        url = (
+            f"https://login.microsoftonline.com/getuserrealm.srf?login=user@{domain_name}")
+        request = o365request.get(url)
+        response = request.text
+        valid_response = re.search('"NameSpaceType":"Managed",', response)
+        if args.verbose:
+            print(domain_name, request, response, valid_response)
+        if valid_response:
+            print(f"[success] The listed domain {domain_name} exists.")
+        else:
+            print(f"[info] The listed domain {domain_name} does not exist.")
+        print(f'[info] Scan completed at {time.ctime()}')
     else:
         sys.exit()
 
@@ -120,6 +140,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+
     except KeyboardInterrupt:
         print("\nYou either fat fingered this, or meant to do it. Either way, goodbye!")
         quit()
