@@ -33,6 +33,8 @@ This will output the help menu, which contains the following flags:
 
 ```-t, --timeout - Sets a pause between attempts in seconds (ex. -t 60)```
 
+```-d, --domain - Checks if the listed domain is valid or not (ex. -d mayorsec.com)```
+
 ```--verbose - Outputs test verbosely```
 
 Examples of full commands include:
