@@ -52,4 +52,4 @@ Make note that Microsoft does have some defense in place that can, from time to 
 ![Oh365UserFinderScan](/images/o365UserFinderscan.png)
 
 ### Acknowledgements
-This project is based on a previous tool named o365Creeper developed by Korey Mckinley that was last supported in 2019, and developed in Python2.  
+This project is loosely inspired by a tool named o365Creeper developed by Korey Mckinley that was last supported in 2019, and developed in Python2.  
