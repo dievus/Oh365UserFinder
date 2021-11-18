@@ -31,9 +31,9 @@ This will output the help menu, which contains the following flags:
 
 ```-c, --csv - Writes valid emails to a CSV file (ex. -c validemails.csv)```
 
-```-t, --throttling - Sets a pause between attempts in seconds (ex. -t 60)```
+```-t, --timeout - Sets a pause between attempts in seconds (ex. -t 60)```
 
-```-v, --verbose - Outputs test verbosely; note that you must use y to run verbosely (ex. -v y)```
+```--verbose - Outputs test verbosely```
 
 Examples of full commands include:
 
