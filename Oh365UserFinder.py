@@ -107,11 +107,13 @@ def main():
                     counter = counter + 1
                     # print(counter)
                     if args.write is not None:
+                        a = email 
                         with open(args.write, 'a+') as valid_emails_file:
-                            valid_emails_file.write(email+'\n')
+                            valid_emails_file.write(f"{a}\n")
                     elif args.csv is not None:
+                        a = email
                         with open(args.csv, 'a+') as valid_emails_file:
-                            valid_emails_file.write(email+'\n')
+                            valid_emails_file.write(f"{a}\n")
 
                 if args.throttling is not None:
                     time.sleep(int(args.throttling))
