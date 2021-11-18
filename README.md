@@ -4,7 +4,7 @@
 
 ![Oh365UserFinder](/images/Oh365UserFinder.png)
 
-Oh365UserFinder is used for identifying valid o365 accounts without the risk of account lockouts.  The tool parses responses to identify the "IfExistsResult" flag is null or not, and responds appropriately if the user is valid.  
+Oh365UserFinder is used for identifying valid o365 accounts and domains without the risk of account lockouts.  The tool parses responses to identify the "IfExistsResult" flag is null or not, and responds appropriately if the user is valid.  
 
 ## Usage
 Installing Oh365UserFinder
