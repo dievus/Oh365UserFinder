@@ -5,7 +5,6 @@ import re
 import textwrap
 import sys
 from datetime import datetime
-import csv
 
 print("-" * 60)
 print("                MayorSec Oh365 User Finder              ")
