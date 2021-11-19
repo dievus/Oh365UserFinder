@@ -5,15 +5,19 @@ import re
 import textwrap
 import sys
 from datetime import datetime
-
 from requests.api import request
 
-print("-" * 60)
-print("                MayorSec Oh365 User Finder              ")
-print("                       Version 1.0.0                    ")
-print("                   A project by The Mayor               ")
-print("           Oh365UserFinder.py -h to get started         ")
-print("-" * 60)
+
+def banner():
+    print("-" * 60)
+    print("                MayorSec Oh365 User Finder              ")
+    print("                       Version 1.0.0                    ")
+    print("                   A project by The Mayor               ")
+    print("           Oh365UserFinder.py -h to get started         ")
+    print("-" * 60)
+    print(f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n')
+
+
 opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
     '''Example: python3 Oh365UserFinder.py -e test@test.com
 Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt --verbose
@@ -30,14 +34,12 @@ opt_parser.add_argument(
     '-w', '--write', help='Writes valid emails to text file')
 opt_parser.add_argument(
     '-c', '--csv', help='Writes valid emails to a .csv file')
-opt_parser.add_argument('--domain', help='Validate if a domain exists')
+opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
 opt_parser.add_argument(
     '--verbose', help='Prints output verbosely', action='store_true')
 
 args = opt_parser.parse_args()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
-
-print(f'[info] Starting Oh365 User Finder at {time.ctime()}\n')
 
 
 def main():
@@ -57,7 +59,7 @@ def main():
         valid_response6 = re.search('"IfExistsResult":6,', response)
         invalid_response = re.search('"IfExistsResult":1,', response)
         if args.verbose:
-            print(s, email, body, request, response, valid_response,
+            print('\n', s, email, body, request, response, valid_response,
                   valid_response5, valid_response6, invalid_response, '\n')
         if invalid_response:
             a = email
@@ -84,7 +86,7 @@ def main():
                 valid_response6 = re.search('"IfExistsResult":6,', response)
                 invalid_response = re.search('"IfExistsResult":1,', response)
                 if args.verbose:
-                    print(s, email_line, email, body, request, response, valid_response,
+                    print('\n', s, email_line, email, body, request, response, valid_response,
                           valid_response5, valid_response6, invalid_response, '\n')
                 if invalid_response:
                     a = email
@@ -139,6 +141,7 @@ def main():
 
 if __name__ == "__main__":
     try:
+        banner()
         main()
 
     except KeyboardInterrupt:
