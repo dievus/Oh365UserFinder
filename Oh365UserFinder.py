@@ -7,16 +7,17 @@ import sys
 from datetime import datetime
 from requests.api import request
 
-
 def banner():
-    print("-" * 60)
-    print("                MayorSec Oh365 User Finder              ")
-    print("                       Version 1.0.0                    ")
-    print("                   A project by The Mayor               ")
-    print("           Oh365UserFinder.py -h to get started         ")
-    print("-" * 60)
+    print("   ____  __   _____ _____ ______   __  __                  _______           __         ")
+    print("  / __ \/ /_ |__  // ___// ____/  / / / /_______  _____   / ____(_)___  ____/ /__  _____")
+    print(" / / / / __ \ /_ </ __ \/___ \   / / / / ___/ _ \/ ___/  / /_  / / __ \/ __  / _ \/ ___/")
+    print("/ /_/ / / / /__/ / /_/ /___/ /  / /_/ (__  )  __/ /     / __/ / / / / / /_/ /  __/ /    ")
+    print("\____/_/ /_/____/\____/_____/   \____/____/\___/_/     /_/   /_/_/ /_/\__,_/\___/_/     \n")
+    print("                                   Version 1.0.0                                        ")
+    print("                               A project by The Mayor                                   ")
+    print("                        Oh365UserFinder.py -h to get started                            \n")                                                                                    
+    print("-" * 90)
     print(f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n')
-
 
 opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
     '''Example: python3 Oh365UserFinder.py -e test@test.com
@@ -64,11 +65,11 @@ def main():
         if invalid_response:
             a = email
             b = " Result - Invalid Email Found! [-]"
-            print(f"[-] {a:20} {b}")
+            print(f"[-] {a:51} {b}")
         if valid_response or valid_response5 or valid_response6:
             a = email
             b = " Result - Valid Email Found! [+]"
-            print(f"[+] {a:20} {b}")
+            print(f"[+] {a:53} {b}")
         if args.timeout is not None:
             time.sleep(int(args.timeout))
 
@@ -91,11 +92,11 @@ def main():
                 if invalid_response:
                     a = email
                     b = " Result - Invalid Email Found! [-]"
-                    print(f"[-] {a:30} {b}")
+                    print(f"[-] {a:51} {b}")
                 if valid_response or valid_response5 or valid_response6:
                     a = email
-                    b = " Result - Valid Email Found! [+]"
-                    print(f"[+] {a:30} {b}")
+                    b = " Result -   Valid Email Found! [+]"
+                    print(f"[+] {a:51} {b}")
                     counter = counter + 1
                     if args.write is not None:
                         a = email
