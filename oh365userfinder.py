@@ -20,7 +20,7 @@ def banner():
     print(" / / / / __ \ /_ </ __ \/___ \   / / / / ___/ _ \/ ___/  / /_  / / __ \/ __  / _ \/ ___/ ")
     print("/ /_/ / / / /__/ / /_/ /___/ /  / /_/ (__  )  __/ /     / __/ / / / / / /_/ /  __/ /     ")
     print("\____/_/ /_/____/\____/_____/   \____/____/\___/_/     /_/   /_/_/ /_/\__,_/\___/_/     \n")
-    print("                                   Version 1.0.0                                         ")
+    print("                                   Version 1.0.1                                         ")
     print("                               A project by The Mayor                                    ")
     print("                        Oh365UserFinder.py -h to get started                            \x1b[0m\n")
     print("-" * 90)
