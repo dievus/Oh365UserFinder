@@ -37,7 +37,7 @@ opt_parser.add_argument(
     '-c', '--csv', help='Writes valid emails to a .csv file')
 opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
 opt_parser.add_argument(
-    '--verbose', help='Prints output verbosely', action='store_true')
+    '-v', '--verbose', help='Prints output verbosely', action='store_true')
 
 args = opt_parser.parse_args()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
@@ -60,7 +60,7 @@ def main():
         valid_response6 = re.search('"IfExistsResult":6,', response)
         invalid_response = re.search('"IfExistsResult":1,', response)
         if args.verbose:
-            print('\n', s, email, body, request, response, valid_response,
+            print('\n', email, s, body, request, response, valid_response,
                   valid_response5, valid_response6, invalid_response, '\n')
         if invalid_response:
             a = email
@@ -87,7 +87,7 @@ def main():
                 valid_response6 = re.search('"IfExistsResult":6,', response)
                 invalid_response = re.search('"IfExistsResult":1,', response)
                 if args.verbose:
-                    print('\n', s, email_line, email, body, request, response, valid_response,
+                    print('\n', email, s, email_line, body, request, response, valid_response,
                           valid_response5, valid_response6, invalid_response, '\n')
                 if invalid_response:
                     a = email
