@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import requests as o365request
 import argparse
 import time
