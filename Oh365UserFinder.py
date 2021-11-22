@@ -94,6 +94,7 @@ def main():
                 valid_response5 = re.search('"IfExistsResult":5,', response)
                 valid_response6 = re.search('"IfExistsResult":6,', response)
                 invalid_response = re.search('"IfExistsResult":1,', response)
+                throttling = re.search('"ThrottleStatus":0', response)
                 if args.verbose:
                     print('\n', s, email_line, email, body, request, response, valid_response,
                           valid_response5, valid_response6, invalid_response, '\n')
@@ -114,7 +115,9 @@ def main():
                         a = email
                         with open(args.csv, 'a+') as valid_emails_file:
                             valid_emails_file.write(f"{a}\n")
-
+                if throttling:
+                    print("\n\033[91m[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times.\x1b[0m")
+                    sys.exit()
                 if args.timeout is not None:
                     time.sleep(int(args.timeout))
             if counter == 0:
