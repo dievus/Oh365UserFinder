@@ -3,7 +3,7 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M03Q2JN)
 
 <p align="center">
-  <img src="https://github.com/dievus/Oh365UserFinder/blob/main/images/Oh365UserFinder1.png" />
+  <img src="https://github.com/dievus/Oh365UserFinder/blob/main/images/Oh365UserFinder1.jpg" />
 </p>
 
 Oh365UserFinder is used for identifying valid o365 accounts and domains without the risk of account lockouts.  The tool parses responses to identify the "IfExistsResult" flag is null or not, and responds appropriately if the user is valid.  
