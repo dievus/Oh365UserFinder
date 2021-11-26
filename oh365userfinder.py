@@ -17,11 +17,10 @@ def sysID():
         k.SetConsoleMode(k.GetStdHandle(-11), 7)
 
 
-global info, close, success, fail
-info = Fore.YELLOW + Style.BRIGHT
-fail = Fore.RED + Style.BRIGHT
-close = Style.RESET_ALL
-success = Fore.GREEN + Style.BRIGHT
+def definitions():
+    global info, close, success, fail
+    info, fail, close, success = Fore.YELLOW + Style.BRIGHT, Fore.RED + \
+        Style.BRIGHT, Style.RESET_ALL, Fore.GREEN + Style.BRIGHT
 
 
 def banner():
@@ -66,7 +65,7 @@ ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 def main():
     if args.timeout is not None:
         print(
-            f'\033[33;1m[info] Timeout set to {args.timeout} seconds between requests.\x1b[0m\n')
+            info + f'[info] Timeout set to {args.timeout} seconds between requests.\n' + close)
     counter = 0
     t1 = datetime.now()
     if args.email is not None:
@@ -92,7 +91,8 @@ def main():
             b = " Result - Valid Email Found! [+]"
             print(success + f"[+] {a:53} {b} " + close)
         if throttling:
-            print(fail + "[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times." + close)
+            print(
+                fail + "\n[warn] Results suggest o365 is responding with false positives. Retry the scan in 60 seconds." + close)
             sys.exit()
         if args.timeout is not None:
             time.sleep(int(args.timeout))
@@ -178,6 +178,7 @@ def main():
 if __name__ == "__main__":
     try:
         sysID()
+        definitions()
         banner()
         main()
 
