@@ -7,15 +7,7 @@ import re
 import textwrap
 import sys
 from datetime import datetime
-from colorama import Fore, Back, Style
-
-
-def sysID():
-    if sys.platform.startswith('win32'):
-        from ctypes import windll
-        k = windll.kernel32
-        k.SetConsoleMode(k.GetStdHandle(-11), 7)
-
+from colorama import Fore, Style, init
 
 def definitions():
     global info, close, success, fail
@@ -177,10 +169,11 @@ def main():
 
 if __name__ == "__main__":
     try:
-        sysID()
+        init()
         definitions()
         banner()
         main()
+
 
     except KeyboardInterrupt:
         print("\nYou either fat fingered this, or meant to do it. Either way, goodbye!")
