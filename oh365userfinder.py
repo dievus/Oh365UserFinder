@@ -1,63 +1,69 @@
 #!/usr/bin/python3
+
 import requests as o365request
 import argparse
 import time
 import re
 import textwrap
 import sys
-import os
-from datetime import datetime
-def sysID():
-    if sys.platform.startswith('win32'):
-        global k
-        from ctypes import windll
-        k = windll.kernel32
-        k.SetConsoleMode(k.GetStdHandle(-11), 7)
+from colorama import Fore, Style, init
+
+
+def definitions():
+    global info, close, success, fail
+    info, fail, close, success = Fore.YELLOW + Style.BRIGHT, Fore.RED + \
+        Style.BRIGHT, Style.RESET_ALL, Fore.GREEN + Style.BRIGHT
+
 
 def banner():
-    print("\033[33;1m")
-    print("    ____  __   _____ _____ ______   __  __                  _______           __          ")
-    print(f"  / __ \/ /_ |__  // ___// ____/  / / / /_______  _____   / ____(_)___  ____/ /__  _____")
+    print(Fore.YELLOW + Style.BRIGHT + "")
+    print("   ____  __   _____ _____ ______   __  __                  _______           __          ")
+    print("  / __ \/ /_ |__  // ___// ____/  / / / /_______  _____   / ____(_)___  ____/ /__  _____")
     print(" / / / / __ \ /_ </ __ \/___ \   / / / / ___/ _ \/ ___/  / /_  / / __ \/ __  / _ \/ ___/ ")
     print("/ /_/ / / / /__/ / /_/ /___/ /  / /_/ (__  )  __/ /     / __/ / / / / / /_/ /  __/ /     ")
     print("\____/_/ /_/____/\____/_____/   \____/____/\___/_/     /_/   /_/_/ /_/\__,_/\___/_/     \n")
     print("                                   Version 1.0.1                                         ")
     print("                               A project by The Mayor                                    ")
-    print("                        Oh365UserFinder.py -h to get started                            \x1b[0m\n")
+    print("                        Oh365UserFinder.py -h to get started                            \n" + Style.RESET_ALL)
     print("-" * 90)
-    print(f'\n\033[33;1m[info] Starting Oh365 User Finder at {time.ctime()}\n\x1b[0m')
 
 
-opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
+
+def options():
+    opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
     '''Example: python3 Oh365UserFinder.py -e test@test.com
 Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30
 Example: python3 Oh365Finder.py -d mayorsec.com
 '''))
-opt_parser.add_argument(
+    opt_parser.add_argument(
     '-e', '--email', help='Runs o365UserFinder against a single email')
-opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
-opt_parser.add_argument(
+    opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
+    opt_parser.add_argument(
     '-t', '--timeout', help='Set timeout between checks to avoid false positives')
-opt_parser.add_argument(
+    opt_parser.add_argument(
     '-w', '--write', help='Writes valid emails to text file')
-opt_parser.add_argument(
+    opt_parser.add_argument(
     '-c', '--csv', help='Writes valid emails to a .csv file')
-opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
-opt_parser.add_argument(
+    opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
+    opt_parser.add_argument(
     '-v', '--verbose', help='Prints output verbosely', action='store_true')
-
-args = opt_parser.parse_args()
+    global args
+    args = opt_parser.parse_args()
+    if len(sys.argv) == 1:
+        opt_parser.print_help()
+        opt_parser.exit()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
 
 def main():
     if args.timeout is not None:
         print(
-            f'\033[33;1m[info] Timeout set to {args.timeout} seconds between requests.\x1b[0m\n')
+            info + f'[info] Timeout set to {args.timeout} seconds between requests.\n' + close)
     counter = 0
-    t1 = datetime.now()
+    print(Fore.YELLOW + Style.BRIGHT +
+          f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n' + Style.RESET_ALL)
     if args.email is not None:
         email = args.email
         s = o365request.session()
@@ -70,18 +76,19 @@ def main():
         invalid_response = re.search('"IfExistsResult":1,', response)
         throttling = re.search('"ThrottleStatus":1', response)
         if args.verbose:
-            print('\n', email,s, body, request, response, valid_response,
+            print('\n', email, s, body, request, response, valid_response,
                   valid_response5, valid_response6, invalid_response, '\n')
         if invalid_response:
             a = email
             b = " Result - Invalid Email Found! [-]"
-            print(f"\033[91m[-] {a:51} {b}\x1b[0m")
+            print(fail + f"[-] {a:51} {b}" + close)
         if valid_response or valid_response5 or valid_response6:
             a = email
             b = " Result - Valid Email Found! [+]"
-            print(f"\033[92m[+] {a:53} {b} \x1b[0m")
+            print(success + f"[+] {a:53} {b} " + close)
         if throttling:
-            print("\n\033[91m[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times.\x1b[0m")
+            print(
+                fail + "\n[warn] Results suggest o365 is responding with false positives. Retry the scan in 60 seconds." + close)
             sys.exit()
         if args.timeout is not None:
             time.sleep(int(args.timeout))
@@ -106,11 +113,11 @@ def main():
                 if invalid_response:
                     a = email
                     b = " Result - Invalid Email Found! [-]"
-                    print(f"\033[91m[-] {a:51} {b}\x1b[0m")
+                    print(fail + f"[-] {a:51} {b}\x1b[0m" + close)
                 if valid_response or valid_response5 or valid_response6:
                     a = email
                     b = " Result -   Valid Email Found! [+]"
-                    print(f"\033[92m[+] {a:51} {b}\x1b[0m")
+                    print(success + f"[+] {a:51} {b}" + close)
                     counter = counter + 1
                     if args.write is not None:
                         a = email
@@ -121,25 +128,31 @@ def main():
                         with open(args.csv, 'a+') as valid_emails_file:
                             valid_emails_file.write(f"{a}\n")
                 if throttling:
-                    print("\n\033[91m[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times.\x1b[0m")
+                    print(
+                        fail + "\n[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times." + close)
                     sys.exit()
                 if args.timeout is not None:
                     time.sleep(int(args.timeout))
             if counter == 0:
-                print('\n\033[91m[-] There were no valid logins found. [-]\x1b[0m\n')
-                print(f'\n\033[33;1m[info] Scan completed at {time.ctime()}\x1b[0m')
+                print(
+                    fail + '\n[-] There were no valid logins found. [-]' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
             elif counter == 1:
                 print(
-                    '\n\033[92m[info] Oh365 User Finder discovered one valid login account.\x1b[0m')
-                print(f'\n\033[33;1m[info] Scan completed at {time.ctime()}')
+                    info + '\n[info] Oh365 User Finder discovered one valid login account.' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
             else:
                 print(
-                    f'\n\033[92m[info] Oh365 User Finder discovered {counter} valid login accounts.\x1b[0m\n')
-                print(f'\n\033[33;1m[info] Scan completed at {time.ctime()}\x1b[0m')
+                    info + f'\n[info] Oh365 User Finder discovered {counter} valid login accounts.\n' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
 
     elif args.domain is not None:
         domain_name = args.domain
-        print(f"\033[33;1m[info] Checking if the {domain_name} exists...\x1b[0m\n")
+        print(
+            info + f"[info] Checking if the {domain_name} exists...\n" + close)
         url = (
             f"https://login.microsoftonline.com/getuserrealm.srf?login=user@{domain_name}")
         request = o365request.get(url)
@@ -148,18 +161,22 @@ def main():
         if args.verbose:
             print(domain_name, request, response, valid_response)
         if valid_response:
-            print(f"\n\033[92m[success] The listed domain {domain_name} exists.\n")
+            print(
+                success + f"\n[success] The listed domain {domain_name} exists.\n" + close)
         else:
-            print(f"\033[91m[info] The listed domain {domain_name} does not exist.\n")
-        print(f'\033[33;1m[info] Scan completed at {time.ctime()}')
+            print(
+                fail + f"[info] The listed domain {domain_name} does not exist.\n" + close)
+        print(info + f'[info] Scan completed at {time.ctime()}' + close)
     else:
         sys.exit()
 
 
 if __name__ == "__main__":
     try:
-        sysID()
+        init()
+        definitions()
         banner()
+        options()
         main()
 
     except KeyboardInterrupt:
