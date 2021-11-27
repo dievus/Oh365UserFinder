@@ -6,8 +6,8 @@ import time
 import re
 import textwrap
 import sys
-from datetime import datetime
 from colorama import Fore, Style, init
+
 
 def definitions():
     global info, close, success, fail
@@ -26,31 +26,34 @@ def banner():
     print("                               A project by The Mayor                                    ")
     print("                        Oh365UserFinder.py -h to get started                            \n" + Style.RESET_ALL)
     print("-" * 90)
-    print(Fore.YELLOW + Style.BRIGHT +
-          f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n' + Style.RESET_ALL)
 
 
-opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
+
+def options():
+    opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
     '''Example: python3 Oh365UserFinder.py -e test@test.com
 Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30
 Example: python3 Oh365Finder.py -d mayorsec.com
 '''))
-opt_parser.add_argument(
+    opt_parser.add_argument(
     '-e', '--email', help='Runs o365UserFinder against a single email')
-opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
-opt_parser.add_argument(
+    opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
+    opt_parser.add_argument(
     '-t', '--timeout', help='Set timeout between checks to avoid false positives')
-opt_parser.add_argument(
+    opt_parser.add_argument(
     '-w', '--write', help='Writes valid emails to text file')
-opt_parser.add_argument(
+    opt_parser.add_argument(
     '-c', '--csv', help='Writes valid emails to a .csv file')
-opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
-opt_parser.add_argument(
+    opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
+    opt_parser.add_argument(
     '-v', '--verbose', help='Prints output verbosely', action='store_true')
-
-args = opt_parser.parse_args()
+    global args
+    args = opt_parser.parse_args()
+    if len(sys.argv) == 1:
+        opt_parser.print_help()
+        opt_parser.exit()
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
 
@@ -59,7 +62,8 @@ def main():
         print(
             info + f'[info] Timeout set to {args.timeout} seconds between requests.\n' + close)
     counter = 0
-    t1 = datetime.now()
+    print(Fore.YELLOW + Style.BRIGHT +
+          f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n' + Style.RESET_ALL)
     if args.email is not None:
         email = args.email
         s = o365request.session()
@@ -161,7 +165,7 @@ def main():
                 success + f"\n[success] The listed domain {domain_name} exists.\n" + close)
         else:
             print(
-                info + f"[info] The listed domain {domain_name} does not exist.\n" + close)
+                fail + f"[info] The listed domain {domain_name} does not exist.\n" + close)
         print(info + f'[info] Scan completed at {time.ctime()}' + close)
     else:
         sys.exit()
@@ -172,8 +176,8 @@ if __name__ == "__main__":
         init()
         definitions()
         banner()
+        options()
         main()
-
 
     except KeyboardInterrupt:
         print("\nYou either fat fingered this, or meant to do it. Either way, goodbye!")
