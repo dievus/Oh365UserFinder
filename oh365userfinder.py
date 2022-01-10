@@ -45,8 +45,14 @@ Example: python3 Oh365Finder.py -d mayorsec.com
     opt_parser.add_argument(
     '-w', '--write', help='Writes valid emails to text file')
     opt_parser.add_argument(
+    '-i', '--invalid', help='Writes invalid emails to text file')
+    opt_parser.add_argument(
     '-c', '--csv', help='Writes valid emails to a .csv file')
     opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
+    opt_parser.add_argument(
+    '-a', '--append', help='Adds @<append_domain> to each attempt (use without @)')
+    opt_parser.add_argument(
+    '-b', '--throttle', help='Does not exit on throttle detection and waits to retry')
     opt_parser.add_argument(
     '-v', '--verbose', help='Prints output verbosely', action='store_true')
     global args
@@ -64,6 +70,12 @@ def main():
     counter = 0
     print(Fore.YELLOW + Style.BRIGHT +
           f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n' + Style.RESET_ALL)
+
+    if args.invalid is not None:
+        with open(args.invalid, "a+") as invalid_emails:
+            invalid_emails.seek(0, 0)
+            invalid = invalid_emails.read().split('\n')
+
     if args.email is not None:
         email = args.email
         s = o365request.session()
@@ -99,40 +111,56 @@ def main():
                 s = o365request.session()
                 email_line = line.split()
                 email = ' '.join(email_line)
+                if args.append is not None:
+                    email = email + "@" + args.append
                 body = '{"Username":"%s"}' % email
-                request = o365request.post(ms_url, data=body)
-                response = request.text
-                valid_response = re.search('"IfExistsResult":0,', response)
-                valid_response5 = re.search('"IfExistsResult":5,', response)
-                valid_response6 = re.search('"IfExistsResult":6,', response)
-                invalid_response = re.search('"IfExistsResult":1,', response)
-                throttling = re.search('"ThrottleStatus":1', response)
-                if args.verbose:
-                    print('\n', s, email_line, email, body, request, response, valid_response,
-                          valid_response5, valid_response6, invalid_response, '\n')
-                if invalid_response:
+                if args.invalid is not None and email in invalid:
                     a = email
-                    b = " Result - Invalid Email Found! [-]"
+                    b = " Result - Previously Recorded Invalid Email Found! [-]"
                     print(fail + f"[-] {a:51} {b}\x1b[0m" + close)
-                if valid_response or valid_response5 or valid_response6:
-                    a = email
-                    b = " Result -   Valid Email Found! [+]"
-                    print(success + f"[+] {a:51} {b}" + close)
-                    counter = counter + 1
-                    if args.write is not None:
+                else:
+                    request = o365request.post(ms_url, data=body)
+                    response = request.text
+                    valid_response = re.search('"IfExistsResult":0,', response)
+                    valid_response5 = re.search('"IfExistsResult":5,', response)
+                    valid_response6 = re.search('"IfExistsResult":6,', response)
+                    invalid_response = re.search('"IfExistsResult":1,', response)
+                    throttling = re.search('"ThrottleStatus":1', response)
+                    if args.verbose:
+                        print('\n', s, email_line, email, body, request, response, valid_response,
+                                valid_response5, valid_response6, invalid_response, '\n')
+                    if throttling:
+                        if args.throttle is not None:
+                            print(
+                                fail + "\n[warn] Results suggest o365 is responding with false positives. Sleeping for "+ args.throttle + " until next try." + close)
+                            time.sleep(int(args.throttle))
+                        else:
+                            print(
+                                fail + "\n[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times." + close)
+                            sys.exit()
+                    elif invalid_response:
                         a = email
-                        with open(args.write, 'a+') as valid_emails_file:
-                            valid_emails_file.write(f"{a}\n")
-                    elif args.csv is not None:
+                        b = " Result - Invalid Email Found! [-]"
+                        print(fail + f"[-] {a:51} {b}\x1b[0m" + close)
+                        if args.invalid is not None:
+                            a = email
+                            with open(args.invalid, 'a+') as invalid_emails_file:
+                                invalid_emails_file.write(f"{a}\n")
+                    elif valid_response or valid_response5 or valid_response6:
                         a = email
-                        with open(args.csv, 'a+') as valid_emails_file:
-                            valid_emails_file.write(f"{a}\n")
-                if throttling:
-                    print(
-                        fail + "\n[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times." + close)
-                    sys.exit()
-                if args.timeout is not None:
-                    time.sleep(int(args.timeout))
+                        b = " Result -   Valid Email Found! [+]"
+                        print(success + f"[+] {a:51} {b}" + close)
+                        counter = counter + 1
+                        if args.write is not None:
+                            a = email
+                            with open(args.write, 'a+') as valid_emails_file:
+                                valid_emails_file.write(f"{a}\n")
+                        elif args.csv is not None:
+                            a = email
+                            with open(args.csv, 'a+') as valid_emails_file:
+                                valid_emails_file.write(f"{a}\n")
+                    if args.timeout is not None:
+                        time.sleep(int(args.timeout))
             if counter == 0:
                 print(
                     fail + '\n[-] There were no valid logins found. [-]' + close)
