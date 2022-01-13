@@ -6,7 +6,7 @@
   <img src="https://github.com/dievus/Oh365UserFinder/blob/main/images/oh365userfinder1.jpg" />
 </p>
 
-Oh365UserFinder is used for identifying valid o365 accounts and domains without the risk of account lockouts.  The tool parses responses to identify the "IfExistsResult" flag is null or not, and responds appropriately if the user is valid.  The tool will attempt to identify false positives based on response, and warn the user to increase timeouts between attempts.  
+Oh365UserFinder is used for identifying valid o365 accounts and domains without the risk of account lockouts.  The tool parses responses to identify the "IfExistsResult" flag is null or not, and responds appropriately if the user is valid.  The tool will attempt to identify false positives based on response, and either automatically create a waiting period to allow the throttling value to reset, or warn the user to increase timeouts between attempts.  
 
 Oh365UserFinder can also easily identify if a domain exists in o365 using the -d or --domain flag.  This saves the trouble of copying the url from notes and entering it into the URL bar with the target domain.
 
