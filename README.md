@@ -47,7 +47,7 @@ Examples of full commands include:
 
 ```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt```
 
-```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 -v y```
+```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 -v```
 
 
 ### Notes
