@@ -22,38 +22,41 @@ def banner():
     print(" / / / / __ \ /_ </ __ \/___ \   / / / / ___/ _ \/ ___/  / /_  / / __ \/ __  / _ \/ ___/ ")
     print("/ /_/ / / / /__/ / /_/ /___/ /  / /_/ (__  )  __/ /     / __/ / / / / / /_/ /  __/ /     ")
     print("\____/_/ /_/____/\____/_____/   \____/____/\___/_/     /_/   /_/_/ /_/\__,_/\___/_/     \n")
-    print("                                   Version 1.0.1                                         ")
+    print("                                   Version 1.0.2                                         ")
     print("                               A project by The Mayor                                    ")
     print("                        Oh365UserFinder.py -h to get started                            \n" + Style.RESET_ALL)
     print("-" * 90)
 
 
-
 def options():
     opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
-    '''Example: python3 Oh365UserFinder.py -e test@test.com
+        '''Example: python3 Oh365UserFinder.py -e test@test.com
 Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 --verbose
 Example: python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30
 Example: python3 Oh365Finder.py -d mayorsec.com
 '''))
     opt_parser.add_argument(
-    '-e', '--email', help='Runs o365UserFinder against a single email')
-    opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
+        '-e', '--email', help='Runs o365UserFinder against a single email')
     opt_parser.add_argument(
-    '-t', '--timeout', help='Set timeout between checks to avoid false positives')
+        '-r', '--read', help='Reads email addresses from file')
     opt_parser.add_argument(
-    '-w', '--write', help='Writes valid emails to text file')
+        '-t', '--timeout', help='Set timeout between checks to avoid false positives')
     opt_parser.add_argument(
-    '-c', '--csv', help='Writes valid emails to a .csv file')
-    opt_parser.add_argument('-d', '--domain', help='Validate if a domain exists')
+        '-w', '--write', help='Writes valid emails to text file')
     opt_parser.add_argument(
-    '-v', '--verbose', help='Prints output verbosely', action='store_true')
+        '-c', '--csv', help='Writes valid emails to a .csv file')
+    opt_parser.add_argument(
+        '-d', '--domain', help='Validate if a domain exists')
+    opt_parser.add_argument(
+        '-v', '--verbose', help='Prints output verbosely', action='store_true')
     global args
     args = opt_parser.parse_args()
     if len(sys.argv) == 1:
         opt_parser.print_help()
         opt_parser.exit()
+
+
 ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
 
@@ -62,6 +65,7 @@ def main():
         print(
             info + f'[info] Timeout set to {args.timeout} seconds between requests.\n' + close)
     counter = 0
+    timeout_counter = 0
     print(Fore.YELLOW + Style.BRIGHT +
           f'\n[info] Starting Oh365 User Finder at {time.ctime()}\n' + Style.RESET_ALL)
     if args.email is not None:
@@ -69,6 +73,7 @@ def main():
         s = o365request.session()
         body = '{"Username":"%s"}' % email
         request = o365request.post(ms_url, data=body)
+        response_dict = request.json()
         response = request.text
         valid_response = re.search('"IfExistsResult":0,', response)
         valid_response5 = re.search('"IfExistsResult":5,', response)
@@ -76,7 +81,7 @@ def main():
         invalid_response = re.search('"IfExistsResult":1,', response)
         throttling = re.search('"ThrottleStatus":1', response)
         if args.verbose:
-            print('\n', email, s, body, request, response, valid_response,
+            print('\n', email, s, body, request, response_dict, response, valid_response,
                   valid_response5, valid_response6, invalid_response, '\n')
         if invalid_response:
             a = email
@@ -88,7 +93,7 @@ def main():
             print(success + f"[+] {a:53} {b} " + close)
         if throttling:
             print(
-                fail + "\n[warn] Results suggest o365 is responding with false positives. Retry the scan in 60 seconds." + close)
+                fail + "\n[warn] Results suggest O365 is responding with false positives. Retry the scan in 60 seconds." + close)
             sys.exit()
         if args.timeout is not None:
             time.sleep(int(args.timeout))
@@ -128,9 +133,31 @@ def main():
                         with open(args.csv, 'a+') as valid_emails_file:
                             valid_emails_file.write(f"{a}\n")
                 if throttling:
-                    print(
-                        fail + "\n[warn] Results suggest o365 is responding with false positives. Restart scan and use the -t flag to slow request times." + close)
-                    sys.exit()
+                    if args.timeout is not None:
+                        timeout_counter = timeout_counter + 1
+                        if timeout_counter == 5:
+                            print(
+                                fail + f'\n[warn] Results suggest O365 is responding with false positives.')
+                            print(
+                                fail + f'\n[warn] O365 has returned five false positives.\n')
+                            print(
+                                info + f'[info] Oh365UserFinder setting timeout to 10 minutes. You can exit or allow the program to continue running.')
+                            time.sleep(int(300))
+                            print(info + f'\nScanning will continue in 5 minutes.')
+                            time.sleep(int(270))
+                            print(info + f'\nContinuing scan in 30 seconds.')
+                            time.sleep(int(30))
+                            timeout_counter = 0
+                            #sys.exit()
+                        else:
+                            print(
+                                fail + f"\n[warn] Results suggest O365 is responding with false positives. Sleeping for {args.timeout} seconds before trying again.\n")
+                            time.sleep(int(args.timeout))
+
+                    else:
+                        print(
+                            fail + "\n[warn] Results suggest O365 is responding with false positives. Restart scan and use the -t flag to slow request times." + close)
+                        sys.exit()
                 if args.timeout is not None:
                     time.sleep(int(args.timeout))
             if counter == 0:
