@@ -50,33 +50,27 @@ This will output the help menu, which contains the following flags:
 ```-gs, --gspray - sword sprays a list of accounts using GRAPH instead of RST```
 
 
-Examples of full commands include:
-### ---Validate a Domain Name in O365---
+### Examples Commands
 
+##### ---Validate a Domain Name in O365---
 ```python3 Oh365Finder.py -d mayorsec.com```
 
 ##### ---Validate a single email---
-
 ```python3 Oh365UserFinder.py -e test@test.com```
 
-### ---Validate a list of emails and write to file---
-
+##### ---Validate a list of emails and write to file---
 ```python3 Oh365UserFinder.py -r testemails.txt -w valid.txt```
 
-### ---Validate a list of emails, write to file and timeout between requests---
-
+##### ---Validate a list of emails, write to file and timeout between requests---
 ```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30```
 
-### ---Validate a list of emails and write to CSV---
-
+##### ---Validate a list of emails and write to CSV---
 ```python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
 
 ### ---Password Spray a list of emails---
-
 ```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
 
-### ---Password Spray a list of emails using GRAPH instead of RST---
-
+##### ---Password Spray a list of emails using GRAPH instead of RST---
 ```python3 Oh365UserFinder.py -r -p <password> --gspray --elist <listname>```
 
 ### Notes
@@ -84,5 +78,5 @@ Make note that Microsoft does have some defense in place that can, from time to 
 
 ![Oh365UserFinderScan](/images/o365UserFinderscan.png)
 
-### Acknowledgements
+##### Acknowledgements
 This started as a port over from Python2 to Python3 of a tool named o365Creeper developed by Korey Mckinley, and it quickly spiraled into what it is now.
