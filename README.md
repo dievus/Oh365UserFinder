@@ -10,7 +10,7 @@ Oh365UserFinder is used for identifying valid o365 accounts and domains without 
 
 Oh365UserFinder can also easily identify if a domain exists in o365 using the -d or --domain flag.  This saves the trouble of copying the url from notes and entering it into the URL bar with the target domain.
 
-With version 1.1.0, password spraying is now possible by making authentication requests via RST or GRAPH. If MFA is enabled, the tool SHOULD identify it when reporting a valid account.
+With version 1.1.0, password spraying is now possible by making authentication requests via RST or GRAPH. If MFA is enabled, the tool SHOULD identify it when reporting a valid account. Keep in mind that account lockouts are possible if too many incorrect attempts are made. Make sure to consult with your client to determine the lockout policy if you have any concerns.
 
 ## Usage
 ##### Installing Oh365UserFinder
