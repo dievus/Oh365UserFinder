@@ -11,19 +11,17 @@ Oh365UserFinder is used for identifying valid o365 accounts and domains without 
 Oh365UserFinder can also easily identify if a domain exists in o365 using the -d or --domain flag.  This saves the trouble of copying the url from notes and entering it into the URL bar with the target domain.
 
 ## Usage
-Installing Oh365UserFinder
-
+##### Installing Oh365UserFinder
 ```git clone https://github.com/dievus/Oh365UserFinder.git```
 
-Change directories to Oh365UserFinder and run:
-
+##### Change directories to Oh365UserFinder and run:
 ```pip3 install -r requirements.txt```
 
 This will run the install script to add necessary dependencies to your system.
 
 ```python3 Oh365UserFinder.py -h```
 
-This will output the help menu, which contains the following flags:
+##### This will output the help menu, which contains the following flags:
 
 ```-h, --help - Lists the help options```
 
@@ -67,7 +65,7 @@ This will output the help menu, which contains the following flags:
 ##### ---Validate a list of emails and write to CSV---
 ```python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
 
-### ---Password Spray a list of emails---
+##### ---Password Spray a list of emails---
 ```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
 
 ##### ---Password Spray a list of emails using GRAPH instead of RST---
