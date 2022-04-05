@@ -25,27 +25,17 @@ This will run the install script to add necessary dependencies to your system.
 
 ##### This will output the help menu, which contains the following flags:
 
-```-h, --help - Lists the help options```
-
-```-e, --email - Required for running Oh365UserFinder against a single email account```
-
-```-r, --read - Reads from a text file containing emails (ex. -r emails.txt)```
-
-```-t, --timeout - Sets a pause between attempts in seconds (ex. -t 60)```
-
-```-w, --write - Writes valid emails to a text document (ex. -w validemails.txt)```
-
-```-c, --csv - Writes valid emails to a CSV file (ex. -c validemails.csv)```
-
-```-d, --domain - Checks if the listed domain is valid or not (ex. -d mayorsec.com)```
-
-```--verbose - Outputs test verbosely```
-
-```-ps, --pwspray - Password sprays a list of accounts```
-
-```-p, --password - Password to be tested```
-
-```-el, --elist - Emails to be tested```
+```-h, --help - Lists the help options\n
+-e, --email - Required for running Oh365UserFinder against a single email account\n
+-r, --read - Reads from a text file containing emails (ex. -r emails.txt)\n
+-t, --timeout - Sets a pause between attempts in seconds (ex. -t 60)\n
+-w, --write - Writes valid emails to a text document (ex. -w validemails.txt)\n
+-c, --csv - Writes valid emails to a CSV file (ex. -c validemails.csv)\n
+-d, --domain - Checks if the listed domain is valid or not (ex. -d mayorsec.com)\n
+--verbose - Outputs test verbosely\n
+-ps, --pwspray - Password sprays a list of accounts\n
+-p, --password - Password to be tested\n
+-el, --elist - Emails to be tested```
 
 
 ### Examples Commands
