@@ -41,7 +41,7 @@ This will run the install script to add necessary dependencies to your system.
 
 ```--verbose - Outputs test verbosely```
 
-```-ps, --pwspray' - Password sprays a list of accounts using RST```
+```-ps, --pwspray - Password sprays a list of accounts using RST```
 
 ```-p, --password - Password to be tested```
 
