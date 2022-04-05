@@ -55,7 +55,7 @@ Examples of full commands include:
 
 ```python3 Oh365Finder.py -d mayorsec.com```
 
-### ---Validate a single email---
+##### ---Validate a single email---
 
 ```python3 Oh365UserFinder.py -e test@test.com```
 
@@ -75,7 +75,7 @@ Examples of full commands include:
 
 ```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
 
-###---Password Spray a list of emails using GRAPH instead of RST---
+### ---Password Spray a list of emails using GRAPH instead of RST---
 
 ```python3 Oh365UserFinder.py -r -p <password> --gspray --elist <listname>```
 
