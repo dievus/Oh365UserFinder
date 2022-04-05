@@ -31,24 +31,53 @@ This will output the help menu, which contains the following flags:
 
 ```-r, --read - Reads from a text file containing emails (ex. -r emails.txt)```
 
+```-t, --timeout - Sets a pause between attempts in seconds (ex. -t 60)```
+
 ```-w, --write - Writes valid emails to a text document (ex. -w validemails.txt)```
 
 ```-c, --csv - Writes valid emails to a CSV file (ex. -c validemails.csv)```
-
-```-t, --timeout - Sets a pause between attempts in seconds (ex. -t 60)```
 
 ```-d, --domain - Checks if the listed domain is valid or not (ex. -d mayorsec.com)```
 
 ```--verbose - Outputs test verbosely```
 
+```-ps, --pwspray' - Password sprays a list of accounts using RST```
+
+```-p, --password - Password to be tested```
+
+```-el, --elist - Emails to be tested```
+
+```-gs, --gspray - sword sprays a list of accounts using GRAPH instead of RST```
+
+
 Examples of full commands include:
+### ---Validate a Domain Name in O365---
 
-```python3 o365UserFinder.py -e example@test.com```
+```python3 Oh365Finder.py -d mayorsec.com```
 
-```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt```
+### ---Validate a single email---
 
-```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 -v```
+```python3 Oh365UserFinder.py -e test@test.com```
 
+### ---Validate a list of emails and write to file---
+
+```python3 Oh365UserFinder.py -r testemails.txt -w valid.txt```
+
+### ---Validate a list of emails, write to file and timeout between requests---
+
+```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30```
+
+### ---Validate a list of emails and write to CSV---
+
+```python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
+
+### ---Password Spray a list of emails---
+
+```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
+
+###---Password Spray a list of emails using GRAPH instead of RST---
+
+```python3 Oh365UserFinder.py -r -p <password> --gspray --elist <listname>```
 
 ### Notes
 Make note that Microsoft does have some defense in place that can, from time to time, provide false positives in feedback.  If you suspect that this is occurring take a pause in testing, and return and increase the duration between attempts using the -t flag.
