@@ -10,7 +10,7 @@ Oh365UserFinder is used for identifying valid o365 accounts and domains without 
 
 Oh365UserFinder can also easily identify if a domain exists in o365 using the -d or --domain flag.  This saves the trouble of copying the url from notes and entering it into the URL bar with the target domain.
 
-With version 1.1.0, password spraying is now possible by making authentication requests via RST or GRAPH. If MFA is enabled, the tool SHOULD identify it when reporting a valid account. Keep in mind that account lockouts are possible if too many incorrect attempts are made. Make sure to consult with your client to determine the lockout policy if you have any concerns.
+With version 1.1.0, password spraying is now possible. If MFA is enabled, the tool SHOULD identify it when reporting a valid account. Keep in mind that account lockouts are possible if too many incorrect attempts are made. Make sure to consult with your client to determine the lockout policy if you have any concerns.
 
 ## Usage
 ##### Installing Oh365UserFinder
@@ -40,22 +40,22 @@ This will run the install script to add necessary dependencies to your system.
 
 ### Examples Commands
 
-##### ---Validate a Domain Name in O365---
+##### Validate a Domain Name in O365
 ```python3 Oh365Finder.py -d mayorsec.com```
 
-##### ---Validate a single email---
+##### Validate a single email
 ```python3 Oh365UserFinder.py -e test@test.com```
 
-##### ---Validate a list of emails and write to file---
+##### Validate a list of emails and write to file
 ```python3 Oh365UserFinder.py -r testemails.txt -w valid.txt```
 
-##### ---Validate a list of emails, write to file and timeout between requests---
+##### Validate a list of emails, write to file and timeout between requests
 ```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30```
 
-##### ---Validate a list of emails and write to CSV---
+##### Validate a list of emails and write to CSV
 ```python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
 
-##### ---Password Spray a list of emails---
+##### Password Spray a list of emails
 ```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
 
 
