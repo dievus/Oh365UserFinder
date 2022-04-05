@@ -35,7 +35,7 @@ This will run the install script to add necessary dependencies to your system.
 --verbose - Outputs test verbosely\n
 -ps, --pwspray - Password sprays a list of accounts\n
 -p, --password - Password to be tested\n
--el, --elist - Emails to be tested
+-el, --elist - Emails to be tested``
 
 
 ### Examples Commands
