@@ -41,13 +41,11 @@ This will run the install script to add necessary dependencies to your system.
 
 ```--verbose - Outputs test verbosely```
 
-```-ps, --pwspray - Password sprays a list of accounts using RST```
+```-ps, --pwspray - Password sprays a list of accounts```
 
 ```-p, --password - Password to be tested```
 
 ```-el, --elist - Emails to be tested```
-
-```-gs, --gspray - sword sprays a list of accounts using GRAPH instead of RST```
 
 
 ### Examples Commands
@@ -70,8 +68,6 @@ This will run the install script to add necessary dependencies to your system.
 ##### ---Password Spray a list of emails---
 ```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
 
-##### ---Password Spray a list of emails using GRAPH instead of RST---
-```python3 Oh365UserFinder.py -r -p <password> --gspray --elist <listname>```
 
 ### Notes
 Make note that Microsoft does have some defense in place that can, from time to time, provide false positives in feedback.  If you suspect that this is occurring take a pause in testing, and return and increase the duration between attempts using the -t flag.
