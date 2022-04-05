@@ -76,7 +76,5 @@ This will output the help menu, which contains the following flags:
 ### Notes
 Make note that Microsoft does have some defense in place that can, from time to time, provide false positives in feedback.  If you suspect that this is occurring take a pause in testing, and return and increase the duration between attempts using the -t flag.
 
-![Oh365UserFinderScan](/images/o365UserFinderscan.png)
-
-##### Acknowledgements
+### Acknowledgements
 This started as a port over from Python2 to Python3 of a tool named o365Creeper developed by Korey Mckinley, and it quickly spiraled into what it is now.
