@@ -228,6 +228,7 @@ def main():
                 response = request.text
                 valid_response = re.search('AADSTS53003', response)
                 account_doesnt_exist = re.search('AADSTS50034', response)
+                account_disabled = re.search('The user account is disabled', response)
                 account_invalid_password = re.search(
                     'AADSTS50126', response)
                 if valid_response:
@@ -245,12 +246,15 @@ def main():
                             success + f"[+] {email:52} {b}" + close)
                     else:
                         b = success + "Result -" + " " * \
-                            10 + "VALID PASSWORD! [+]"
+                            14 + "VALID PASSWORD! [+]"
                         print(
-                            success + f"[+] {email:56} {b}" + close)
+                            success + f"[+] {email:52} {b}" + close)
                 if account_doesnt_exist:
                     b = "Result - " + " "*12 + "Invalid Account! [-]"
                     print(fail + f"[-] {email:52} {b}" + close)
+                if account_disabled:
+                    b = "Result - " + " "*11 + "Account disabled. [!]"
+                    print(info + f"[!] {email:52} {b}" + close)                    
                 if account_invalid_password:
                     a = email
                     b = " Result - " + " "*8 + "Invalid Credentials! [-]"
@@ -287,6 +291,7 @@ def main():
                 valid_response = re.search('53003', response)
                 account_doesnt_exist = re.search('50034', response)
                 account_invalid_password = re.search('50126', response)
+                account_disabled = re.search('The user account is disabled', response)
                 valid_response1 = re.search('7000218', response)
                 mfa_true = re.search('50076', response)
                 if valid_response:
@@ -302,6 +307,9 @@ def main():
                 if account_doesnt_exist:
                     b = " Result - " + " "*12 + "Invalid Account! [-]"
                     print(fail + f"[-] {email:51} {b}" + close)
+                if account_disabled:
+                    b = "Result - " + " "*11 + "Account disabled. [!]"
+                    print(info + f"[!] {email:52} {b}" + close)                     
                 if account_invalid_password:
                     a = email
                     b = " Result - " + " "*8 + "Invalid Credentials! [-]"
