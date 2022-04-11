@@ -21,7 +21,7 @@ With version 1.1.0, password spraying is now possible. If MFA is enabled, the to
 
 This will run the install script to add necessary dependencies to your system.
 
-```python3 Oh365UserFinder.py -h```
+```python3 oh365UserFinder.py -h```
 
 ##### This will output the help menu, which contains the following flags:
 
@@ -41,22 +41,22 @@ This will run the install script to add necessary dependencies to your system.
 ### Examples Commands
 
 ##### Validate a Domain Name in O365
-```python3 Oh365Finder.py -d mayorsec.com```
+```python3 oh365Finder.py -d mayorsec.com```
 
 ##### Validate a single email
-```python3 Oh365UserFinder.py -e test@test.com```
+```python3 oh365UserFinder.py -e test@test.com```
 
 ##### Validate a list of emails and write to file
-```python3 Oh365UserFinder.py -r testemails.txt -w valid.txt```
+```python3 oh365UserFinder.py -r testemails.txt -w valid.txt```
 
 ##### Validate a list of emails, write to file and timeout between requests
-```python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30```
+```python3 oh365UserFinder.py -r emails.txt -w validemails.txt -t 30```
 
 ##### Validate a list of emails and write to CSV
-```python3 Oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
+```python3 oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
 
 ##### Password Spray a list of emails
-```python3 Oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
+```python3 oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
 
 
 ### Notes
