@@ -202,9 +202,10 @@ def main():
         response = request.text
         print(response)
         valid_response = re.search('"NameSpaceType":"Managed",', response)
+        valid_response1 = re.search(':NameSpaceType":"Federated",', response)
         if args.verbose:
             print(domain_name, request, response, valid_response)
-        if valid_response:
+        if valid_response or valid_response1:
             print(
                 success + f"\n[success] The listed domain {domain_name} exists.\n" + close)
         else:
