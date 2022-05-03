@@ -103,7 +103,7 @@ def main():
         if args.verbose:
             print('\n', email, s, body, request, response_dict, response, valid_response,
                   valid_response5, valid_response6, invalid_response, desktopsso_response,'\n')
-        if desktopsso_response:
+        if desktopsso_response and not valid_response or valid_response5 or valid_response6:
             a = email
             b = " Result -  Desktop SSO Enabled [!]"
             print(
