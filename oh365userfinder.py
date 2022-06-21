@@ -273,7 +273,11 @@ def main():
                     b = "Result - " + " "*13 + "LOCKOUT DETECTED! [!]"
                     print(info + f"[!] {email:44} {b}" + close)
                     lockout_counter = lockout_counter + 1
-                    lockout = int(args.lockout) * 60
+                    if args.lockout:
+                        lock_time = args.lockout
+                    if args.lockout is None:
+                        lock_time = 1                     
+                    lockout = int(lock_time) * 60
                     if lockout_counter == 3:
                         print(fail + f'\n[warn] Multiple lockouts detected.\n')
                         con_proc = input("Would you like to continue the scan after the lockout period is over? (y/n) ")
