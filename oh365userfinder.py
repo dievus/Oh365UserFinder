@@ -22,7 +22,7 @@ def banner():
     print(" / / / / __ \ /_ </ __ \/___ \   / / / / ___/ _ \/ ___/  / /_  / / __ \/ __  / _ \/ ___/ ")
     print("/ /_/ / / / /__/ / /_/ /___/ /  / /_/ (__  )  __/ /     / __/ / / / / / /_/ /  __/ /     ")
     print("\____/_/ /_/____/\____/_____/   \____/____/\___/_/     /_/   /_/_/ /_/\__,_/\___/_/     \n")
-    print("                                   Version 1.1.1                                         ")
+    print("                                   Version 1.1.0                                         ")
     print("                               A project by The Mayor                                    ")
     print("                        Oh365UserFinder.py -h to get started                            \n" + Style.RESET_ALL)
     print("-" * 90)
@@ -214,19 +214,16 @@ def main():
         url = (
             f"https://login.microsoftonline.com/getuserrealm.srf?login=user@{domain_name}")
         request = o365request.get(url)
-        # print(request)
+        print(request)
         response = request.text
-        # print(response)
+        print(response)
         valid_response = re.search('"NameSpaceType":"Managed",', response)
         valid_response1 = re.search('"NameSpaceType":"Federated",', response)
         if args.verbose:
             print(domain_name, request, response, valid_response)
-        if valid_response:
+        if valid_response or valid_response1:
             print(
-                success + f"[success] The listed domain {domain_name} exists. Domain is Managed.\n" + close)
-        elif valid_response1:
-            print(
-                success + f"[success] The listed domain {domain_name} exists. Domain is Federated.\n" + close)
+                success + f"\n[success] The listed domain {domain_name} exists.\n" + close)
         else:
             print(
                 fail + f"[info] The listed domain {domain_name} does not exist.\n" + close)
@@ -285,23 +282,23 @@ def main():
                     lockout = int(lock_time) * 60
                     if lockout_counter == 3:
                         print(fail + f'\n[warn] Multiple lockouts detected.\n')
-                        def timeout_proc():
-                            con_proc = input("Would you like to continue the scan after the lockout period is over? (y/n) ")
-                            if con_proc == "y" or "Y":
-                                print(
-                                    info + f"Waiting {lockout} seconds before continuing.")
-                                lockout = lockout - 30
-                                time.sleep(int(lockout))
-                                print(info + f'\nContinuing scan in 30 seconds.')
-                                time.sleep(int(30))
-                                timeout_counter = 0
-                                lockout_counter = 0
-                            elif con_proc == "n" or "N":
-                                print(info + "Quitting.")
-                                sys.exit()
-                            else:
-                                timeout_proc()
-                        timeout_proc()
+                        con_proc = input("Would you like to continue the scan after the lockout period is over? (y/n) ")
+                        if con_proc == "y" or "Y":
+                            print(
+                                info + f"Waiting {lockout} seconds before continuing.")
+                            lockout = lockout - 30
+                            time.sleep(int(lockout))
+                            print(info + f'\nContinuing scan in 30 seconds.')
+                            time.sleep(int(30))
+                            timeout_counter = 0
+                            lockout_counter = 0
+                        elif con_proc == "n" or "N":
+                            print(info + "Quitting.")
+                            sys.exit()
+                        else:
+                            print(
+                                fail + f"\n[warn] Invalid input. Quitting.\n")
+                            sys.exit()
                 if desktopsso_response:
                     a = email
                     b = " Result -  Desktop SSO Enabled [!]"
