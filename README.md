@@ -56,7 +56,7 @@ This will run the install script to add necessary dependencies to your system.
 ```python3 oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
 
 ##### Password Spray a list of emails
-```python3 oh365UserFinder.py -r -p <password> --pwspray --elist <listname>```
+```python3 oh365UserFinder.py -p <password> --pwspray --elist <listname>```
 
 
 ### Notes
