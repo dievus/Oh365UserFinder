@@ -278,18 +278,18 @@ def main():
                     b = "Result - " + " "*13 + "LOCKOUT DETECTED! [!]"
                     print(info + f"[!] {email:44} {b}" + close)
                     lockout_counter = lockout_counter + 1   
-                    if args.lockout:
-                        lock_time = args.lockout
-                        lockout = int(lock_time)
-                    if args.lockout is None:
-                        lock_time = 1                     
-                        lockout = int(lock_time) * 60
-                    if lockout_counter == 3:
-                        print(fail + f'\n[warn] Multiple lockouts detected.\n')
-                        print(info + f"Waiting {lockout} seconds before continuing.")
-                        time.sleep(int(lockout))
-                        timeout_counter = 0
-                        lockout_counter = 0
+                    # if args.lockout:
+                    #     lock_time = args.lockout
+                    #     lockout = int(lock_time)
+                    # if args.lockout is None:
+                    #     lock_time = 1                     
+                    #     lockout = int(lock_time) * 60
+                    # if lockout_counter == 3:
+                    #     print(fail + f'\n[warn] Multiple lockouts detected.\n')
+                    #     print(info + f"Waiting {lockout} seconds before continuing.")
+                    #     time.sleep(int(lockout))
+                    #     timeout_counter = 0
+                    #     lockout_counter = 0
                 if desktopsso_response:
                     a = email
                     b = " Result -  Desktop SSO Enabled [!]"
