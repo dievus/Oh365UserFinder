@@ -1,4 +1,4 @@
-# Oh365 User Finder v1.1.0
+# Oh365 User Finder v1.1.2
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/M4M03Q2JN)
 
