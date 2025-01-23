@@ -14,14 +14,14 @@ With version 1.1.0, password spraying is now possible. If MFA is enabled, the to
 
 ## Usage
 ##### Installing Oh365UserFinder
-```git clone https://github.com/dievus/Oh365UserFinder.git```
+```git clone https://github.com/dievus/oh365userfinder.git```
 
 ##### Change directories to Oh365UserFinder and run:
 ```pip3 install -r requirements.txt```
 
 This will run the install script to add necessary dependencies to your system.
 
-```python3 oh365UserFinder.py -h```
+```python3 oh365userfinder.py -h```
 
 ##### This will output the help menu, which contains the following flags:
 
@@ -44,19 +44,19 @@ This will run the install script to add necessary dependencies to your system.
 ```python3 oh365Finder.py -d mayorsec.com```
 
 ##### Validate a single email
-```python3 oh365UserFinder.py -e test@test.com```
+```python3 oh365userfinder.py -e test@test.com```
 
 ##### Validate a list of emails and write to file
-```python3 oh365UserFinder.py -r testemails.txt -w valid.txt```
+```python3 oh365userfinder.py -r testemails.txt -w valid.txt```
 
 ##### Validate a list of emails, write to file and timeout between requests
-```python3 oh365UserFinder.py -r emails.txt -w validemails.txt -t 30```
+```python3 oh365userfinder.py -r emails.txt -w validemails.txt -t 30```
 
 ##### Validate a list of emails and write to CSV
-```python3 oh365UserFinder.py -r emails.txt -c validemails.csv -t 30```
+```python3 oh365userfinder.py -r emails.txt -c validemails.csv -t 30```
 
 ##### Password Spray a list of emails
-```python3 oh365UserFinder.py -p <password> --pwspray --elist <listname>```
+```python3 oh365userfinder.py -p <password> --pwspray --elist <listname>```
 
 
 ### Notes
