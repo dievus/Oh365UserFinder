@@ -41,7 +41,7 @@ This will run the install script to add necessary dependencies to your system.
 ### Examples Commands
 
 ##### Validate a Domain Name in O365
-```python3 oh365Finder.py -d mayorsec.com```
+```python3 oh365userfinder.py -d mayorsec.com```
 
 ##### Validate a single email
 ```python3 oh365userfinder.py -e test@test.com```
